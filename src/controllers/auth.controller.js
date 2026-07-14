@@ -1,5 +1,16 @@
-import { registerService, loginService } from "../services/auth.service.js";
+import {
+  registerService,
+  loginService,
+  refreshTokenService,
+} from "../services/auth.service.js";
 import asyncHandler from "../utils/asyncHandler.js";
+
+const cookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "strict",
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+};
 
 export const registerController = asyncHandler(async (req, res) => {
   const user = await registerService(req.body);
@@ -11,10 +22,26 @@ export const registerController = asyncHandler(async (req, res) => {
 });
 
 export const loginController = asyncHandler(async (req, res) => {
-  const data = await loginService(req.body);
+  const { user, accessToken, refreshToken } = await loginService(req.body);
+
+  res.cookie("refreshToken", refreshToken, cookieOptions);
 
   res.status(200).json({
     success: true,
-    data,
+    accessToken,
+    user,
+  });
+});
+
+export const refreshTokenController = asyncHandler(async (req, res) => {
+  const { accessToken, refreshToken } = await refreshTokenService(
+    req.cookies.refreshToken,
+  );
+
+  res.cookie("refreshToken", refreshToken, cookieOptions);
+
+  res.status(200).json({
+    success: true,
+    accessToken,
   });
 });

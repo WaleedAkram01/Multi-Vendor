@@ -21,7 +21,6 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      select: false,
     },
     //   password: {
     //     type: String,
@@ -63,22 +62,22 @@ const userSchema = new mongoose.Schema(
     //     default: null,
     //   },
 
-    //   refreshTokens: [
-    //     {
-    //       tokenHash: {
-    //         type: String,
-    //         required: true,
-    //       },
-    //       device: {
-    //         type: String,
-    //         default: "Unknown Device",
-    //       },
-    //       createdAt: {
-    //         type: Date,
-    //         default: Date.now,
-    //       },
-    //     },
-    //   ],
+    refreshTokens: [
+      {
+        tokenHash: {
+          type: String,
+          required: true,
+        },
+        device: {
+          type: String,
+          default: "Unknown Device",
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
 
     //   passwordChangedAt: {
     //     type: Date,
