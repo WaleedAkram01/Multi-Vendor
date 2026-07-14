@@ -22,7 +22,11 @@ export const registerService = async ({ name, email, password }) => {
     password,
   });
 
-  return user;
+  //select:false sirf query pe lagta hai, naye document mein password mojood hota hai
+  const safeUser = user.toObject();
+  delete safeUser.password;
+
+  return safeUser;
 };
 export const loginService = async ({ email, password, device }) => {
   const user = await User.findOne({ email }).select("+password");
@@ -37,13 +41,16 @@ export const loginService = async ({ email, password, device }) => {
 
   user.refreshTokens.push({
     tokenHash,
-    device: "Chrome",
+    device: device || "Unknown Device",
   });
 
   await user.save();
 
+  const safeUser = user.toObject();
+  delete safeUser.password;
+
   return {
-    user,
+    user: safeUser,
     accessToken,
     refreshToken,
   };
@@ -72,11 +79,11 @@ export const refreshTokenService = async (refreshToken) => {
   }
 
   //4. DB SOURCE OF TRUTH - hash mojood hai ya nahi?
-  const tokenExists = user.refreshTokens.some(
+  const existingToken = user.refreshTokens.find(
     (token) => token.tokenHash === tokenHash,
   );
 
-  if (!tokenExists) {
+  if (!existingToken) {
     throw new ApiError(401, "Invalid refresh token");
   }
 
@@ -85,13 +92,13 @@ export const refreshTokenService = async (refreshToken) => {
     (token) => token.tokenHash !== tokenHash,
   );
 
-  //6. NAYE TOKENS + NAYA HASH SAVE
+  //6. NAYE TOKENS + NAYA HASH SAVE (device purane token se hi chalta rahega)
   const accessToken = generateAccessToken(user);
   const newRefreshToken = generateRefreshToken(user);
 
   user.refreshTokens.push({
     tokenHash: hashToken(newRefreshToken),
-    device: "Chrome",
+    device: existingToken.device,
   });
 
   await user.save();

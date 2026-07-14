@@ -22,7 +22,10 @@ export const registerController = asyncHandler(async (req, res) => {
 });
 
 export const loginController = asyncHandler(async (req, res) => {
-  const { user, accessToken, refreshToken } = await loginService(req.body);
+  const { user, accessToken, refreshToken } = await loginService({
+    ...req.body,
+    device: req.headers["user-agent"],
+  });
 
   res.cookie("refreshToken", refreshToken, cookieOptions);
 
