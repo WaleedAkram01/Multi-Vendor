@@ -3,7 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import healthRoutes from "./routes/health.routes.js";
 import authRoutes from "./routes/auth.routes.js";
-
+import errorMiddleware from "./middlewares/error.middleware.js";
 const app = express();
 
 // Middleware
@@ -28,5 +28,6 @@ app.use(cookieParser());
 // Routes
 app.use("/", healthRoutes);
 app.use("/api/v1/auth", authRoutes);
+app.use(errorMiddleware);
 
 export default app;
