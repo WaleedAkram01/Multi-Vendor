@@ -77,6 +77,10 @@ export const refreshTokenService = async (refreshToken) => {
   if (!user) {
     throw new ApiError(401, "Unauthorized");
   }
+  //Because deleted/disabled user refresh nahi kar sakta.
+  if (!user.isActive) {
+    throw new ApiError(403, "Account disabled");
+  }
 
   //4. DB SOURCE OF TRUTH - hash mojood hai ya nahi?
   const existingToken = user.refreshTokens.find(

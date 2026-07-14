@@ -18,49 +18,46 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
+
     password: {
       type: String,
-      required: true,
+      required: function () {
+        return !this.googleId;
+      },
+      select: false,
     },
-    //   password: {
-    //     type: String,
-    //     required: function () {
-    //       return !this.googleId;
-    //     },
-    //     select: false,
-    //   },
 
-    //   role: {
-    //     type: String,
-    //     enum: ["CUSTOMER", "VENDOR", "ADMIN", "SUPER_ADMIN"],
-    //     default: "CUSTOMER",
-    //   },
+    role: {
+      type: String,
+      enum: ["CUSTOMER", "VENDOR", "ADMIN", "SUPER_ADMIN"],
+      default: "CUSTOMER",
+    },
 
-    //   avatar: {
-    //     url: {
-    //       type: String,
-    //       default: "",
-    //     },
-    //     publicId: {
-    //       type: String,
-    //       default: "",
-    //     },
-    //   },
+    avatar: {
+      url: {
+        type: String,
+        default: "",
+      },
+      publicId: {
+        type: String,
+        default: "",
+      },
+    },
 
-    //   isEmailVerified: {
-    //     type: Boolean,
-    //     default: false,
-    //   },
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
+    },
 
-    //   isActive: {
-    //     type: Boolean,
-    //     default: true,
-    //   },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
 
-    //   googleId: {
-    //     type: String,
-    //     default: null,
-    //   },
+    googleId: {
+      type: String,
+      default: null,
+    },
 
     refreshTokens: [
       {
