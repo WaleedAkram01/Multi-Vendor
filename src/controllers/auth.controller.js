@@ -6,6 +6,7 @@ import {
 import asyncHandler from "../utils/asyncHandler.js";
 
 const cookieOptions = {
+  //means http request kyy sath hii cookie jai automatically.
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",
   sameSite: "strict",
@@ -22,6 +23,13 @@ export const registerController = asyncHandler(async (req, res) => {
 });
 
 export const loginController = asyncHandler(async (req, res) => {
+  //Yeh destructuring hai. loginService ek object return karta hai jismein 3 cheezein hoti hain: user, accessToken, refreshToken.
+  //// loginService kuch aisa return karta hai:
+  // return {
+  //   user: { id: 1, name: "Amir" },
+  //   accessToken: "abc123",
+  //   refreshToken: "xyz789",
+  // };
   const { user, accessToken, refreshToken } = await loginService({
     ...req.body,
     device: req.headers["user-agent"],

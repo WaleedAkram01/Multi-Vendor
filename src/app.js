@@ -28,6 +28,7 @@ app.use(cookieParser());
 // Routes
 app.use("/", healthRoutes);
 app.use("/api/v1/auth", authRoutes);
+
 app.use(errorMiddleware);
 
 export default app;
