@@ -54,6 +54,7 @@ export const loginService = async ({ email, password, device }) => {
   };
 };
 
+//Yeh function naya token banata hai jab purana expire ho jaaye. 6 steps:
 export const refreshTokenService = async (refreshToken) => {
   //1. COOKIE MOJOOD HAI?
   if (!refreshToken) {
@@ -81,6 +82,7 @@ export const refreshTokenService = async (refreshToken) => {
   }
 
   //4. DB SOURCE OF TRUTH - hash mojood hai ya nahi?
+
   const existingToken = user.refreshTokens.find(
     (token) => token.tokenHash === tokenHash,
   );
@@ -90,6 +92,8 @@ export const refreshTokenService = async (refreshToken) => {
   }
 
   //5. ROTATION - purana hash hatao
+
+  //Jin ka token match krr gia unhay htaa do brother.
   user.refreshTokens = user.refreshTokens.filter(
     (token) => token.tokenHash !== tokenHash,
   );

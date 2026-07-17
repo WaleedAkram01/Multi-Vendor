@@ -4,6 +4,11 @@ import ApiError from "../utils/ApiError.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
 export const protect = asyncHandler(async (req, res, next) => {
+  //Remember:-
+  // Access token browser memory mai save hota hai.
+  // Refresh token cookie mai save hota hai.
+
+  //Yehan prr header syy iss laiy lai rhyy bcz refresh token hmm lai rhyy hain.
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
