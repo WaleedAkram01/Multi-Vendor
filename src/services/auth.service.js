@@ -114,3 +114,22 @@ export const refreshTokenService = async (refreshToken) => {
     refreshToken: newRefreshToken,
   };
 };
+
+export const logoutService = async (req) => {
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) {
+    throw new ApiError(401, "Unauthorized");
+  }
+
+  const tokenHash = hashToken(refreshToken);
+  const user = await User.findById(decoded.id);
+  if (!user) {
+    throw new ApiError(401, "Unauthorized");
+  }
+
+  user.refreshTokens = user.refreshTokens.filter(
+    (token) => token.tokenHash !== tokenHash,
+  );
+
+  await user.save();
+};

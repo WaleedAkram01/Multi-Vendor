@@ -2,6 +2,7 @@ import {
   registerService,
   loginService,
   refreshTokenService,
+  logoutService,
 } from "../services/auth.service.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
@@ -54,5 +55,15 @@ export const refreshTokenController = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     accessToken,
+  });
+});
+
+export const logoutController = asyncHandler(async (req, res) => {
+  await logoutService(req);
+  res.clearCookie("refreshToken", cookieOptions);
+
+  res.status(200).json({
+    success: true,
+    message: "Logged out successfully",
   });
 });

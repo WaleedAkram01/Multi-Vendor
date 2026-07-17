@@ -25,6 +25,6 @@ router.get("/me", protect, (req, res) => {
     user: req.user,
   });
 });
-router.post("/logout", protect);
+router.post("/logout", protect, logoutController);
 
 export default router;
